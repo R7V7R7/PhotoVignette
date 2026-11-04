@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PhotoVignette - Marco Especial para Eventos</title>
+  
+  <!-- Mobile & iOS Web App optimization -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PhotoVignette">
+  <meta name="theme-color" content="#0a0b0e">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Elegant Font for Celebration -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Camera Viewport & Frame Overlay -->
+    <main class="camera-viewport" id="viewport">
+      <video id="cameraVideo" autoplay playsinline webkit-playsinline muted></video>
+      <canvas id="frameCanvasOverlay"></canvas>
+    </main>
+
+    <!-- Top Action Bar -->
+    <header class="top-bar">
+      <button class="icon-btn" id="btnFlipCamera" aria-label="Cambiar Cámara" title="Cambiar Cámara">
+        <svg viewBox="0 0 24 24"><path d="M7 7h10v2l4-3-4-3v2H5c-1.1 0-2 .9-2 2v4h2V7zm10 10H7v-2l-4 3 4 3v-2h12c1.1 0 2-.9 2-2v-4h-2v4z"/></svg>
+      </button>
+
+      <div class="event-title-badge" id="eventBadge">Nuestra Boda</div>
+
+      <button class="icon-btn" id="btnSettings" aria-label="Ajustes y QR" title="Ajustes y Código QR">
+        <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      </button>
+    </header>
+
+    <!-- Bottom Controls Bar -->
+    <footer class="bottom-bar">
+      <!-- Mode Toggle: Foto / Video -->
+      <nav class="mode-selector">
+        <button class="mode-btn active" id="btnModePhoto" data-mode="photo">Foto</button>
+        <button class="mode-btn" id="btnModeVideo" data-mode="video">Video</button>
+      </nav>
+
+      <!-- Shutter Controls -->
+      <div class="shutter-row">
+        <!-- Main Shutter Button -->
+        <button class="shutter-btn" id="btnShutter" aria-label="Capturar Foto">
+          <div class="recording-timer" id="recordingTimer">
+            <span class="rec-dot"></span>
+            <span id="timerText">00:00</span>
+          </div>
+          <div class="shutter-btn-inner"></div>
+        </button>
+      </div>
+    </footer>
+
+    <!-- Direct Permission / Auto-Start Prompt (iOS & Android) -->
+    <div class="permission-overlay" id="permissionOverlay">
+      <div class="permission-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 12m-3.2 0a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+      </div>
+      <h1 class="permission-title">Cámara del Evento</h1>
+      <p class="permission-desc">Presiona para encender tu cámara y tomar recuerdos con nuestro marco exclusivo.</p>
+      <button class="btn-primary" id="btnStartCamera">Abrir Cámara</button>
+    </div>
+
+    <!-- Capture Preview Modal (Photo / Video result) -->
+    <div class="preview-modal hidden" id="previewModal">
+      <div class="preview-content" id="previewContent">
+        <!-- Dynamic img or video element injected here -->
+      </div>
+      <div class="preview-actions">
+        <button class="btn-secondary" id="btnRetake">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          Tomar otra
+        </button>
+        <button class="btn-primary" id="btnShareDownload">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          Guardar / Compartir
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings & QR Modal -->
+    <div class="dialog-modal hidden" id="settingsModal">
+      <div class="dialog-card">
+        <div class="dialog-header">
+          <h2 class="dialog-title">Configuración del Marco</h2>
+          <button class="dialog-close" id="btnCloseSettings">&times;</button>
+        </div>
+
+        <div class="dialog-field">
+          <label class="dialog-label" for="inputCustomText">Texto del Marco:</label>
+          <input type="text" id="inputCustomText" class="dialog-input" placeholder="Ej. Carlos & Sofía" value="Nuestra Boda">
+        </div>
+
+        <div class="dialog-field">
+          <label class="dialog-label">Código QR para Invitados:</label>
+          <div class="qr-box">
+            <canvas id="qrCanvas" width="180" height="180"></canvas>
+          </div>
+          <small style="color: var(--text-muted); font-size: 11px; display: block; text-align: center;">
+            Apunta la cámara de otro celular aquí para abrir la app directamente.
+          </small>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; margin-top: 10px;" id="btnSaveSettings">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/qr-generator.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/frame-renderer.js"></script>
+  <script src="js/recorder.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

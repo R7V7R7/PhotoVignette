@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="70" viewBox="0 0 280 70">
+  <defs>
+    <linearGradient id="goldCenter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="35%" stop-color="#FFF4D0"/>
+      <stop offset="70%" stop-color="#C59B27"/>
+      <stop offset="100%" stop-color="#9A7B1C"/>
+    </linearGradient>
+    <linearGradient id="goldPlacard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1c1813" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0a0805" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="goldStrokeC" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B8860B"/>
+      <stop offset="50%" stop-color="#FFDF73"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Left connection lines (y=42 to y=68 in local coordinates to match border height 30px at the bottom) -->
+  <!-- The bottom border is 30px high, so the connection lines are at y = 42 (inner), y = 68 (outer) -->
+  <line x1="0" y1="42" x2="45" y2="42" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
+  <line x1="0" y1="46" x2="45" y2="46" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
+  <line x1="0" y1="64" x2="45" y2="64" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
+  <line x1="0" y1="68" x2="45" y2="68" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
+
+  <!-- Right connection lines -->
+  <line x1="235" y1="42" x2="280" y2="42" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
+  <line x1="235" y1="46" x2="280" y2="46" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
+  <line x1="235" y1="64" x2="280" y2="64" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
+  <line x1="235" y1="68" x2="280" y2="68" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
+
+  <!-- Arching transitions connecting border into central crest -->
+  <path d="M 45,68 C 65,68 75,60 85,50 C 95,40 100,25 140,25 C 180,25 185,40 195,50 C 205,60 215,68 235,68" 
+        fill="none" stroke="url(#goldStrokeC)" stroke-width="1.6"/>
+  <path d="M 45,42 C 60,42 70,30 85,20 C 100,10 115,8 140,8 C 165,8 180,10 195,20 C 210,30 220,42 235,42" 
+        fill="none" stroke="url(#goldStrokeC)" stroke-width="1.6"/>
+
+  <!-- Central Plaque Background -->
+  <path d="M 60,56 C 80,48 100,28 140,28 C 180,28 200,48 220,56 C 190,68 90,68 60,56 Z" 
+        fill="url(#goldPlacard)" filter="url(#glow)"/>
+
+  <!-- Celebratory Flourishes Left & Right -->
+  <path d="M 90,38 C 75,32 70,22 80,16 C 90,10 98,22 86,28" 
+        fill="none" stroke="url(#goldCenter)" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M 190,38 C 205,32 210,22 200,16 C 190,10 182,22 194,28" 
+        fill="none" stroke="url(#goldCenter)" stroke-width="1.4" stroke-linecap="round"/>
+
+  <!-- Wedding Rings Symbol at Top Center -->
+  <circle cx="134" cy="20" r="7.5" fill="none" stroke="url(#goldCenter)" stroke-width="2" />
+  <circle cx="146" cy="20" r="7.5" fill="none" stroke="url(#goldCenter)" stroke-width="2" />
+  <circle cx="134" cy="13" r="1.5" fill="#FFFFFF" opacity="0.9" />
+
+  <!-- Decorative Laurel / Leaf Sprays -->
+  <path d="M 115,22 Q 105,18 108,12 Q 116,16 115,22 Z" fill="url(#goldCenter)" opacity="0.85"/>
+  <path d="M 165,22 Q 175,18 172,12 Q 164,16 165,22 Z" fill="url(#goldCenter)" opacity="0.85"/>
+
+  <!-- Ribbon Banner Text Area for Celebration -->
+  <text x="140" y="52" 
+        text-anchor="middle" 
+        font-family="'Cinzel', 'Playfair Display', 'Georgia', serif" 
+        font-size="13" 
+        font-weight="bold" 
+        letter-spacing="2" 
+        fill="url(#goldCenter)">OUR SPECIAL DAY</text>
+
+  <!-- Accent Gemstone -->
+  <circle cx="140" cy="62" r="2.5" fill="url(#goldCenter)"/>
+  <circle cx="140" cy="62" r="1" fill="#FFFFFF"/>
+</svg>

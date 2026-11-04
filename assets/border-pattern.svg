@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 60 30">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="35%" stop-color="#FFF4D0"/>
+      <stop offset="70%" stop-color="#C59B27"/>
+      <stop offset="100%" stop-color="#9A7B1C"/>
+    </linearGradient>
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B8860B"/>
+      <stop offset="50%" stop-color="#FFDF73"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer and inner border guide lines -->
+  <line x1="0" y1="2" x2="60" y2="2" stroke="url(#goldStroke)" stroke-width="1.5" />
+  <line x1="0" y1="28" x2="60" y2="28" stroke="url(#goldStroke)" stroke-width="1.5" />
+  <line x1="0" y1="6" x2="60" y2="6" stroke="url(#gold)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
+  <line x1="0" y1="24" x2="60" y2="24" stroke="url(#gold)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
+
+  <!-- Repeating filigree knot -->
+  <path d="M 0,15 C 10,7 20,7 30,15 C 40,23 50,23 60,15 C 50,7 40,7 30,15 C 20,23 10,23 0,15 Z" 
+        fill="none" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- Central bead ornament -->
+  <circle cx="30" cy="15" r="3" fill="url(#gold)" stroke="#5c4408" stroke-width="0.5"/>
+  <circle cx="30" cy="15" r="1.2" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="0" cy="15" r="2" fill="url(#gold)"/>
+  <circle cx="60" cy="15" r="2" fill="url(#gold)"/>
+</svg>
