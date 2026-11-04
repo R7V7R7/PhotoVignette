@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // State
   let currentMode = "photo"; // 'photo' or 'video'
-  let customText = localStorage.getItem("photo_vignette_text") || "Nuestra Boda";
+  let customText = localStorage.getItem("photo_vignette_text") || "Nataly & Jorge";
   let currentCapture = null; // { blob, url, type, filename }
   let timerInterval = null;
   let timerSeconds = 0;
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   btnCloseSettings.addEventListener("click", closeSettings);
 
   btnSaveSettings.addEventListener("click", () => {
-    const newText = inputCustomText.value.trim() || "Nuestra Boda";
+    const newText = inputCustomText.value.trim() || "Nataly & Jorge";
     customText = newText;
     localStorage.setItem("photo_vignette_text", customText);
     eventBadge.textContent = customText;

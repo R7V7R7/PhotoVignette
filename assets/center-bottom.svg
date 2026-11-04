@@ -1,73 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="280" height="70" viewBox="0 0 280 70">
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="90" viewBox="0 0 360 90">
   <defs>
-    <linearGradient id="goldCenter" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#D4AF37"/>
-      <stop offset="35%" stop-color="#FFF4D0"/>
-      <stop offset="70%" stop-color="#C59B27"/>
-      <stop offset="100%" stop-color="#9A7B1C"/>
+      <stop offset="30%" stop-color="#FFF2C2"/>
+      <stop offset="70%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#AA8222"/>
     </linearGradient>
-    <linearGradient id="goldPlacard" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1c1813" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#0a0805" stop-opacity="0.95"/>
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#AA8222"/>
+      <stop offset="50%" stop-color="#FFF2C2"/>
+      <stop offset="100%" stop-color="#AA8222"/>
     </linearGradient>
-    <linearGradient id="goldStrokeC" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#B8860B"/>
-      <stop offset="50%" stop-color="#FFDF73"/>
-      <stop offset="100%" stop-color="#B8860B"/>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000000" flood-opacity="0.6"/>
+    <radialGradient id="plaqueGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#181510" stop-opacity="0.95"/>
+      <stop offset="85%" stop-color="#0a0907" stop-opacity="0.90"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.8"/>
     </filter>
   </defs>
 
-  <!-- Left connection lines (y=42 to y=68 in local coordinates to match border height 30px at the bottom) -->
-  <!-- The bottom border is 30px high, so the connection lines are at y = 42 (inner), y = 68 (outer) -->
-  <line x1="0" y1="42" x2="45" y2="42" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
-  <line x1="0" y1="46" x2="45" y2="46" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
-  <line x1="0" y1="64" x2="45" y2="64" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
-  <line x1="0" y1="68" x2="45" y2="68" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
+  <!-- Left connector lines (seamless junction with the bottom frame lines) -->
+  <line x1="0" y1="65" x2="55" y2="65" stroke="url(#goldStroke)" stroke-width="2"/>
+  <line x1="0" y1="57" x2="55" y2="57" stroke="url(#goldStroke)" stroke-width="1" stroke-dasharray="3,3" opacity="0.85"/>
 
-  <!-- Right connection lines -->
-  <line x1="235" y1="42" x2="280" y2="42" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
-  <line x1="235" y1="46" x2="280" y2="46" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
-  <line x1="235" y1="64" x2="280" y2="64" stroke="url(#goldCenter)" stroke-width="0.75" stroke-dasharray="3,3" opacity="0.8"/>
-  <line x1="235" y1="68" x2="280" y2="68" stroke="url(#goldStrokeC)" stroke-width="1.5"/>
+  <!-- Right connector lines (seamless junction with the bottom frame lines) -->
+  <line x1="305" y1="65" x2="360" y2="65" stroke="url(#goldStroke)" stroke-width="2"/>
+  <line x1="305" y1="57" x2="360" y2="57" stroke="url(#goldStroke)" stroke-width="1" stroke-dasharray="3,3" opacity="0.85"/>
 
-  <!-- Arching transitions connecting border into central crest -->
-  <path d="M 45,68 C 65,68 75,60 85,50 C 95,40 100,25 140,25 C 180,25 185,40 195,50 C 205,60 215,68 235,68" 
-        fill="none" stroke="url(#goldStrokeC)" stroke-width="1.6"/>
-  <path d="M 45,42 C 60,42 70,30 85,20 C 100,10 115,8 140,8 C 165,8 180,10 195,20 C 210,30 220,42 235,42" 
-        fill="none" stroke="url(#goldStrokeC)" stroke-width="1.6"/>
+  <!-- Arching ribbons connecting borders into the center plaque -->
+  <path d="M 55,65 C 75,65 85,55 95,45 C 105,35 120,20 180,20 C 240,20 255,35 265,45 C 275,55 285,65 305,65" 
+        fill="none" stroke="url(#goldStroke)" stroke-width="1.8"/>
+  <path d="M 55,57 C 75,57 85,47 95,37 C 105,27 120,12 180,12 C 240,12 255,27 265,37 C 275,47 285,57 305,57" 
+        fill="none" stroke="url(#goldStroke)" stroke-width="1" opacity="0.75"/>
 
-  <!-- Central Plaque Background -->
-  <path d="M 60,56 C 80,48 100,28 140,28 C 180,28 200,48 220,56 C 190,68 90,68 60,56 Z" 
-        fill="url(#goldPlacard)" filter="url(#glow)"/>
+  <!-- Central Plaque Backdrop -->
+  <ellipse cx="180" cy="48" rx="100" ry="32" fill="url(#plaqueGlow)" filter="url(#shadow)"/>
 
-  <!-- Celebratory Flourishes Left & Right -->
-  <path d="M 90,38 C 75,32 70,22 80,16 C 90,10 98,22 86,28" 
-        fill="none" stroke="url(#goldCenter)" stroke-width="1.4" stroke-linecap="round"/>
-  <path d="M 190,38 C 205,32 210,22 200,16 C 190,10 182,22 194,28" 
-        fill="none" stroke="url(#goldCenter)" stroke-width="1.4" stroke-linecap="round"/>
+  <!-- Wedding Rings Symbol at Top -->
+  <g transform="translate(180, 16)">
+    <!-- Left Ring -->
+    <ellipse cx="-7" cy="0" rx="9" ry="9" fill="none" stroke="url(#goldStroke)" stroke-width="2"/>
+    <!-- Right Ring -->
+    <ellipse cx="7" cy="0" rx="9" ry="9" fill="none" stroke="url(#goldStroke)" stroke-width="2"/>
+    <!-- Diamond sparkle on top of ring -->
+    <path d="M -7,-12 L -5,-9 L -7,-6 L -9,-9 Z" fill="#FFF2C2"/>
+    <circle cx="-7" cy="-9" r="1.5" fill="#FFFFFF"/>
+  </g>
 
-  <!-- Wedding Rings Symbol at Top Center -->
-  <circle cx="134" cy="20" r="7.5" fill="none" stroke="url(#goldCenter)" stroke-width="2" />
-  <circle cx="146" cy="20" r="7.5" fill="none" stroke="url(#goldCenter)" stroke-width="2" />
-  <circle cx="134" cy="13" r="1.5" fill="#FFFFFF" opacity="0.9" />
+  <!-- Left & Right Filigree Flourishes -->
+  <path d="M 100,48 C 112,42 118,32 112,24 C 106,18 96,26 104,34 C 110,40 120,44 135,46" 
+        fill="none" stroke="url(#goldStroke)" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M 260,48 C 248,42 242,32 248,24 C 254,18 264,26 256,34 C 250,40 240,44 225,46" 
+        fill="none" stroke="url(#goldStroke)" stroke-width="1.2" stroke-linecap="round"/>
 
-  <!-- Decorative Laurel / Leaf Sprays -->
-  <path d="M 115,22 Q 105,18 108,12 Q 116,16 115,22 Z" fill="url(#goldCenter)" opacity="0.85"/>
-  <path d="M 165,22 Q 175,18 172,12 Q 164,16 165,22 Z" fill="url(#goldCenter)" opacity="0.85"/>
-
-  <!-- Ribbon Banner Text Area for Celebration -->
-  <text x="140" y="52" 
+  <!-- Couple Names: "Nataly & Jorge" (Great Vibes calligraphy font) -->
+  <text id="namesText" x="180" y="52" 
         text-anchor="middle" 
-        font-family="'Cinzel', 'Playfair Display', 'Georgia', serif" 
-        font-size="13" 
-        font-weight="bold" 
-        letter-spacing="2" 
-        fill="url(#goldCenter)">OUR SPECIAL DAY</text>
+        font-family="'Great Vibes', 'Cinzel', cursive, serif" 
+        font-size="28" 
+        fill="url(#goldText)"
+        filter="url(#shadow)">Nataly &amp; Jorge</text>
 
-  <!-- Accent Gemstone -->
-  <circle cx="140" cy="62" r="2.5" fill="url(#goldCenter)"/>
-  <circle cx="140" cy="62" r="1" fill="#FFFFFF"/>
+  <!-- Date / Subtitle -->
+  <text id="dateText" x="180" y="68" 
+        text-anchor="middle" 
+        font-family="'Cinzel', 'Cormorant Garamond', serif" 
+        font-size="9" 
+        font-weight="600"
+        letter-spacing="2.5" 
+        fill="url(#goldText)" 
+        opacity="0.9">20 DE NOVIEMBRE DE 2026</text>
+
+  <!-- Delicate accent dots -->
+  <circle cx="180" cy="77" r="1.8" fill="url(#goldText)"/>
+  <circle cx="170" cy="77" r="1" fill="url(#goldText)" opacity="0.7"/>
+  <circle cx="190" cy="77" r="1" fill="url(#goldText)" opacity="0.7"/>
 </svg>

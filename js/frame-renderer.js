@@ -2,17 +2,20 @@
 
 /**
  * FrameRenderer
- * Manages loading and drawing the decorative camera frame onto HTML5 Canvas.
- * Supports dynamic scaling, responsive resolution, and sharp high-DPI rendering.
+ * Manages loading and drawing the wedding floral frame onto HTML5 Canvas.
+ * Incorporates:
+ *  - Official high-res floral corner vignettes from the wedding invitation (assets/floral-*.png)
+ *  - Continuous gold border repeat (assets/border-pattern.svg)
+ *  - Dedicated "Nataly & Jorge" commemorative central crest (assets/center-bottom.svg)
  */
 class FrameRenderer {
   constructor(options = {}) {
     this.borderPatternSrc = options.borderPatternSrc || "assets/border-pattern.svg";
     this.cornerSrcs = {
-      tl: options.cornerTlSrc || "assets/corner-tl.svg",
-      tr: options.cornerTrSrc || "assets/corner-tr.svg",
-      bl: options.cornerBlSrc || "assets/corner-bl.svg",
-      br: options.cornerBrSrc || "assets/corner-br.svg",
+      tl: options.cornerTlSrc || "assets/floral-left.png",
+      tr: options.cornerTrSrc || "assets/floral-right.png",
+      bl: options.cornerBlSrc || "assets/floral-bl.png",
+      br: options.cornerBrSrc || "assets/floral-br.png",
     };
     this.centerBottomSrc = options.centerBottomSrc || "assets/center-bottom.svg";
 
@@ -26,14 +29,10 @@ class FrameRenderer {
     };
 
     this.isLoaded = false;
-    this.borderHeight = options.borderHeight || 30; // base thickness of border
-    this.cornerBaseSize = options.cornerBaseSize || 100; // base corner size
-    this.centerBaseWidth = options.centerBaseWidth || 280; // base center bottom width
-    this.centerBaseHeight = options.centerBaseHeight || 70; // base center bottom height
   }
 
   /**
-   * Preload all frame SVG assets into memory
+   * Preload all frame assets into memory
    */
   async loadAssets() {
     const loadImage = (src) => {
@@ -74,24 +73,149 @@ class FrameRenderer {
    * @param {CanvasRenderingContext2D} ctx - Target 2D rendering context
    * @param {number} width - Target width in pixels
    * @param {number} height - Target height in pixels
-   * @param {Object} [customOptions] - Optional customizations (text, date, scale)
+   * @param {Object} [customOptions] - Optional customizations (text, date)
    */
   draw(ctx, width, height, customOptions = {}) {
     if (!this.isLoaded) return;
 
-    // Scale calculation based on viewport/canvas dimensions
-    // For mobile portrait (e.g. 1080x1920 or screen 390x844), scale relative to ~400px width
     const minDim = Math.min(width, height);
-    const scale = Math.max(0.65, Math.min(minDim / 380, 2.2));
+    // Base scale relative to mobile viewport ~400px width
+    const scale = Math.max(0.68, Math.min(minDim / 400, 2.8));
 
-    const borderThickness = this.borderHeight * scale;
-    const cornerSize = this.cornerBaseSize * scale;
-    const centerWidth = this.centerBaseWidth * scale;
-    const centerHeight = this.centerBaseHeight * scale;
+    // Geometric alignment constants
+    const inset = 18 * scale; // Distance of the outer frame line from canvas edge
+    const borderThickness = 24 * (scale * 0.75); // Height of the border pattern strip
+    const borderUnitWidth = 40 * (borderThickness / 24);
+
+    // Corner bouquet size (gracefully sits anchored in the corners)
+    const cornerSize = Math.min(minDim * 0.38, 170 * scale);
+
+    // Center bottom crest dimensions
+    const centerWidth = Math.min(width * 0.78, 350 * scale);
+    const centerHeight = (centerWidth / 360) * 90;
+    const centerX = (width - centerWidth) / 2;
+
+    // In center-bottom.svg, the baseline outer connector line is at y = 65 out of 90.
+    // Placing centerY so that centerY + (65/90)*centerHeight === height - inset
+    // guarantees an exact pixel-perfect match with the bottom border line!
+    const centerY = (height - inset) - (65 / 90) * centerHeight;
+    const centerLeftX = centerX + (55 / 360) * centerWidth;
+    const centerRightX = centerX + (305 / 360) * centerWidth;
 
     ctx.save();
 
-    // 1. Draw Corners
+    // ----------------------------------------------------
+    // 1. Draw Border Repeating Patterns
+    // ----------------------------------------------------
+
+    // TOP BORDER
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(inset, inset - borderThickness + (20 / 24) * borderThickness, width - 2 * inset, borderThickness);
+    ctx.clip();
+    for (let x = inset; x < width - inset; x += borderUnitWidth) {
+      ctx.drawImage(
+        this.images.border,
+        x,
+        inset - (20 / 24) * borderThickness,
+        borderUnitWidth,
+        borderThickness
+      );
+    }
+    ctx.restore();
+
+    // BOTTOM BORDER - Left segment (from left inset to centerLeftX)
+    const bottomPatternY = (height - inset) - (20 / 24) * borderThickness;
+    if (centerLeftX > inset) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(inset, bottomPatternY, centerLeftX - inset, borderThickness);
+      ctx.clip();
+      for (let x = inset; x < centerLeftX; x += borderUnitWidth) {
+        ctx.drawImage(this.images.border, x, bottomPatternY, borderUnitWidth, borderThickness);
+      }
+      ctx.restore();
+    }
+
+    // BOTTOM BORDER - Right segment (from centerRightX to width - inset)
+    if (width - inset > centerRightX) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(centerRightX, bottomPatternY, (width - inset) - centerRightX, borderThickness);
+      ctx.clip();
+      for (let x = centerRightX; x < width - inset; x += borderUnitWidth) {
+        ctx.drawImage(this.images.border, x, bottomPatternY, borderUnitWidth, borderThickness);
+      }
+      ctx.restore();
+    }
+
+    // LEFT BORDER (Rotated 90 deg)
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(inset - (20 / 24) * borderThickness, inset, borderThickness, height - 2 * inset);
+    ctx.clip();
+    for (let y = inset; y < height - inset; y += borderUnitWidth) {
+      ctx.save();
+      ctx.translate(inset + borderThickness - (20 / 24) * borderThickness, y);
+      ctx.rotate(Math.PI / 2);
+      ctx.drawImage(this.images.border, 0, 0, borderUnitWidth, borderThickness);
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // RIGHT BORDER (Rotated -90 deg)
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(width - inset - borderThickness + (20 / 24) * borderThickness, inset, borderThickness, height - 2 * inset);
+    ctx.clip();
+    for (let y = inset; y < height - inset; y += borderUnitWidth) {
+      ctx.save();
+      ctx.translate(width - inset - borderThickness + (20 / 24) * borderThickness, y + borderUnitWidth);
+      ctx.rotate(-Math.PI / 2);
+      ctx.drawImage(this.images.border, 0, 0, borderUnitWidth, borderThickness);
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // ----------------------------------------------------
+    // 2. Draw Bottom Center Special Emblem
+    // ----------------------------------------------------
+    ctx.drawImage(this.images.centerBottom, centerX, centerY, centerWidth, centerHeight);
+
+    // If custom text differs from the couple default, render dynamic text on top
+    const textValue = (customOptions.customText || "Nataly & Jorge").trim();
+    if (
+      textValue &&
+      textValue.toLowerCase() !== "nataly & jorge" &&
+      textValue.toLowerCase() !== "nataly y jorge"
+    ) {
+      ctx.save();
+      // Mask existing name area with clean dark radial gradient
+      const maskX = centerX + centerWidth * 0.22;
+      const maskY = centerY + centerHeight * 0.35;
+      const maskW = centerWidth * 0.56;
+      const maskH = centerHeight * 0.35;
+
+      ctx.fillStyle = "rgba(18, 16, 12, 0.95)";
+      ctx.beginPath();
+      ctx.ellipse(centerX + centerWidth / 2, maskY + maskH / 2, maskW / 2, maskH / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Render custom text with calligraphy style
+      ctx.font = `italic bold ${Math.round(20 * (centerWidth / 360))}px 'Great Vibes', 'Cinzel', cursive, serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#FFDF73";
+      ctx.shadowColor = "#000000";
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetY = 1;
+      ctx.fillText(textValue, centerX + centerWidth / 2, maskY + maskH / 2);
+      ctx.restore();
+    }
+
+    // ----------------------------------------------------
+    // 3. Draw Floral Corner Vignettes on Top (Organic & Natural)
+    // ----------------------------------------------------
     // Top-Left
     ctx.drawImage(this.images.cornerTL, 0, 0, cornerSize, cornerSize);
     // Top-Right
@@ -100,116 +224,6 @@ class FrameRenderer {
     ctx.drawImage(this.images.cornerBL, 0, height - cornerSize, cornerSize, cornerSize);
     // Bottom-Right
     ctx.drawImage(this.images.cornerBR, width - cornerSize, height - cornerSize, cornerSize, cornerSize);
-
-    // 2. Draw Repeating Borders
-    const borderPatternWidth = (this.images.border.width || 60) * (borderThickness / 30);
-
-    // TOP BORDER: from cornerSize to (width - cornerSize)
-    const topStart = cornerSize;
-    const topEnd = width - cornerSize;
-    if (topEnd > topStart) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(topStart, 0, topEnd - topStart, borderThickness);
-      ctx.clip();
-      for (let x = topStart; x < topEnd; x += borderPatternWidth) {
-        ctx.drawImage(this.images.border, x, 0, borderPatternWidth, borderThickness);
-      }
-      ctx.restore();
-    }
-
-    // BOTTOM BORDER: Left section & Right section (separated by center-bottom emblem)
-    const bottomY = height - borderThickness;
-    const centerLeftX = (width - centerWidth) / 2;
-    const centerRightX = centerLeftX + centerWidth;
-
-    // Bottom-Left segment
-    const blEnd = Math.max(cornerSize, centerLeftX + 5 * scale);
-    if (blEnd > cornerSize) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(cornerSize, bottomY, blEnd - cornerSize, borderThickness);
-      ctx.clip();
-      for (let x = cornerSize; x < blEnd; x += borderPatternWidth) {
-        ctx.drawImage(this.images.border, x, bottomY, borderPatternWidth, borderThickness);
-      }
-      ctx.restore();
-    }
-
-    // Bottom-Right segment
-    const brStart = Math.min(width - cornerSize, centerRightX - 5 * scale);
-    const brEnd = width - cornerSize;
-    if (brEnd > brStart) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(brStart, bottomY, brEnd - brStart, borderThickness);
-      ctx.clip();
-      for (let x = brStart; x < brEnd; x += borderPatternWidth) {
-        ctx.drawImage(this.images.border, x, bottomY, borderPatternWidth, borderThickness);
-      }
-      ctx.restore();
-    }
-
-    // LEFT BORDER: from cornerSize to (height - cornerSize)
-    const leftStart = cornerSize;
-    const leftEnd = height - cornerSize;
-    if (leftEnd > leftStart) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0, leftStart, borderThickness, leftEnd - leftStart);
-      ctx.clip();
-      // Draw rotated pattern along the left edge
-      for (let y = leftStart; y < leftEnd; y += borderPatternWidth) {
-        ctx.save();
-        ctx.translate(borderThickness, y);
-        ctx.rotate(Math.PI / 2);
-        ctx.drawImage(this.images.border, 0, 0, borderPatternWidth, borderThickness);
-        ctx.restore();
-      }
-      ctx.restore();
-    }
-
-    // RIGHT BORDER: from cornerSize to (height - cornerSize)
-    const rightStart = cornerSize;
-    const rightEnd = height - cornerSize;
-    if (rightEnd > rightStart) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(width - borderThickness, rightStart, borderThickness, rightEnd - rightStart);
-      ctx.clip();
-      // Draw rotated pattern along the right edge
-      for (let y = rightStart; y < rightEnd; y += borderPatternWidth) {
-        ctx.save();
-        ctx.translate(width, y + borderPatternWidth);
-        ctx.rotate(-Math.PI / 2);
-        ctx.drawImage(this.images.border, 0, 0, borderPatternWidth, borderThickness);
-        ctx.restore();
-      }
-      ctx.restore();
-    }
-
-    // 3. Draw Bottom Center Special Emblem
-    const centerX = (width - centerWidth) / 2;
-    const centerY = height - centerHeight;
-    ctx.drawImage(this.images.centerBottom, centerX, centerY, centerWidth, centerHeight);
-
-    // 4. Optional Custom Text Overlay (e.g. Names or Date)
-    if (customOptions.customText) {
-      ctx.save();
-      ctx.font = `bold ${Math.round(11 * scale)}px 'Cinzel', 'Playfair Display', serif, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "#FFDF73";
-      ctx.shadowColor = "#000000";
-      ctx.shadowBlur = 4;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 1;
-
-      // Position text nicely inside the central cartouche
-      const textY = centerY + centerHeight * 0.74;
-      ctx.fillText(customOptions.customText.toUpperCase(), width / 2, textY);
-      ctx.restore();
-    }
 
     ctx.restore();
   }
